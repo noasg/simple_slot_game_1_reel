@@ -118,7 +118,7 @@ export class ReelView extends PIXI.Container {
     });
 
     const totalHeight = this.symbolSprites.length * this.slotHeight;
-    const visibleCount = 3;
+
     const finalOffset = spinSequence.length * this.slotHeight;
     console.log(" finalOffset", spinSequence.length, this.slotHeight);
     this.spinTicker?.stop();
