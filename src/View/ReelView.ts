@@ -9,7 +9,6 @@ export class ReelView extends PIXI.Container {
   private background: PIXI.Sprite;
   private symbolSprites: PIXI.Sprite[] = [];
   private reelWidth: number;
-  private reelHeight: number;
   private slotHeight: number;
   private reelMask: PIXI.Graphics;
   private spinTicker?: PIXI.Ticker;
@@ -24,8 +23,7 @@ export class ReelView extends PIXI.Container {
   ) {
     super();
     this.reelWidth = reelWidth;
-    this.reelHeight = reelHeight;
-    this.slotHeight = reelHeight / 3;
+    this.slotHeight = reelHeight / 3; // only used locally
 
     // background & mask
     this.background = createBackground(bgTexture, reelWidth, reelHeight);
@@ -121,7 +119,7 @@ export class ReelView extends PIXI.Container {
   forceStop(finalSymbols: string[]) {
     if (!this.isSpinning) return;
 
-    // stop ticker if it's animating
+    // stop ticker immediately
     this.spinTicker?.stop();
 
     // finish immediately with final symbols
@@ -129,6 +127,7 @@ export class ReelView extends PIXI.Container {
   }
 
   private finishSpin(finalSymbols: string[], callback?: () => void) {
+    // remove all current symbols
     this.symbolSprites.forEach((s) => this.removeChild(s));
     this.symbolSprites = [];
 
