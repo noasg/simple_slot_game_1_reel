@@ -108,7 +108,7 @@ export class ReelView extends PIXI.Container {
         this.reelWidth,
         this.slotHeight,
         0,
-        i * this.slotHeight,
+        i * this.slotHeight - spinSequence.length * this.slotHeight, // start above the mask
         this.reelMask
       );
       if (sprite) {
