@@ -1,6 +1,8 @@
 import { ReelModel } from "../model/ReelModel";
 import { SpinButton } from "../View/SpinButtonView";
 import { ReelView } from "../View/ReelView";
+import { weelSpinDuration } from "../utils/Constants";
+
 import * as PIXI from "pixi.js";
 export class GameController {
   private reel: ReelModel;
@@ -26,7 +28,7 @@ export class GameController {
 
   private handleSpin() {
     if (this.isSpinning) {
-      console.log("⚠️ Force stopping current spin");
+      console.log("Force stopping current spin");
       if (this.currentResult) {
         this.reelView.forceStop(this.currentResult.symbols); // ✅ keep same result
         this.isSpinning = false;
@@ -34,16 +36,17 @@ export class GameController {
       return;
     }
 
-    // ✅ Only generate spin result when starting a NEW spin
+    this.reelView.hideWinBgs();
+
     this.currentResult = this.reel.spin();
     this.isSpinning = true;
 
     console.log("Next 3 symbols:", this.currentResult.symbols);
     this.message.text = `  ${this.currentResult.symbols.join(" | ")}`;
 
-    this.reelView.spin(this.currentResult.symbols, 1000, () => {
+    this.reelView.spin(this.currentResult.symbols, weelSpinDuration, () => {
       this.isSpinning = false;
-      console.log("✅ Spin finished");
+      console.log("Spin finished");
     });
   }
 }

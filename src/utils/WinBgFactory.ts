@@ -14,7 +14,7 @@ export function createWinBgs(
     const winSprite = new PIXI.Sprite(texture);
     winSprite.width = reelWidth - borderSize * 2;
     winSprite.height = slotHeight - borderSize * 2;
-    winSprite.visible = true; // or false initially
+    winSprite.visible = false; // or false initially
     winSprite.x = borderSize;
     winSprite.y = borderSize + i * slotHeight;
     winBgs.push(winSprite);
