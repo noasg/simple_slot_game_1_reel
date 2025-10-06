@@ -98,7 +98,7 @@ export class ReelView extends PIXI.Container {
     console.log("Current top 3 symbols:", currentSymbols, finalSymbols);
 
     // build spin sequence (includes extra symbols for smooth drop)
-    const spinSequence = createSpinSequence(currentSymbols, finalSymbols, 14);
+    const spinSequence = createSpinSequence(currentSymbols, finalSymbols, 17);
     console.log("spinSequence", spinSequence);
 
     // keep old symbols

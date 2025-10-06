@@ -3,7 +3,6 @@ import * as PIXI from "pixi.js";
 export function animateReel(
   sprites: PIXI.Sprite[],
   slotHeight: number,
-  // totalHeight: number,
   finalOffset: number,
   duration: number,
   onComplete: () => void
@@ -11,10 +10,12 @@ export function animateReel(
   let elapsed = 0;
   const ticker = new PIXI.Ticker();
 
-  // Store initial positions
+  // Store initial positions for smooth drop
   const startYs = sprites.map((s, i) => {
-    if (i < 3) return s.y; // top 3 start where they are
-    return s.y - slotHeight; // extra symbol starts above the mask
+    // top 3 stay at current position
+    if (i < 3) return s.y;
+    // extra symbols start just above the top symbol
+    return s.y - slotHeight;
   });
 
   ticker.add((deltaTime) => {
@@ -25,32 +26,24 @@ export function animateReel(
     // Move all sprites downward smoothly
     sprites.forEach((sprite, i) => {
       sprite.y = startYs[i] + offset;
-      // optional: hide symbols outside the mask
+      // hide symbols outside mask
       sprite.visible = sprite.y + slotHeight > 0 && sprite.y < slotHeight * 3;
     });
 
     if (t >= 1) {
       ticker.stop();
 
-      const visibleCount = 3; // final visible symbols
-      const totalSymbols = sprites.length;
-
-      // sort by Y to get last 3 visible
-      sprites.sort((a, b) => a.y - b.y);
-
-      // hide all first
-      sprites.forEach((s) => (s.visible = false));
-
-      // snap final 3 symbols into mask
-      for (let i = 0; i < visibleCount; i++) {
-        const sprite = sprites[totalSymbols - visibleCount + i];
+      // Snap the final 3 symbols into the mask
+      for (let i = 0; i < 3; i++) {
+        const sprite = sprites[sprites.length - 3 + i]; // last 3 in the array
         sprite.visible = true;
         sprite.y = i * slotHeight;
       }
 
       const visible = sprites
-        .slice(totalSymbols - visibleCount)
+        .slice(sprites.length - 3)
         .map((s) => s.texture.textureCacheIds?.[0] || "unknown");
+
       console.log("✅ Final visible symbols:", visible);
 
       onComplete();
