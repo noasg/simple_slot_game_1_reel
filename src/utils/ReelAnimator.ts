@@ -12,7 +12,7 @@ export function animateReel(
   const ticker = new PIXI.Ticker();
 
   ticker.add((deltaTime) => {
-    elapsed += deltaTime * (1000 / 100);
+    elapsed += deltaTime * (1000 / 3100);
     const t = Math.min(elapsed / duration, 1);
     const offset = t * finalOffset;
 
