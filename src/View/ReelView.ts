@@ -4,6 +4,8 @@ import { createBackground, createMask } from "../utils/ReelLayoutFactory";
 import { createSpinSequence } from "../utils/ReelUtils";
 import { createSymbolSprite } from "../utils/SymbolFactory";
 import { animateReel } from "../utils/ReelAnimator";
+import { createWinBgs } from "../utils/WinBgFactory";
+import { borderSize } from "../utils/Constants";
 
 export class ReelView extends PIXI.Container {
   private background: PIXI.Sprite;
@@ -13,7 +15,8 @@ export class ReelView extends PIXI.Container {
   private reelMask: PIXI.Graphics;
   private spinTicker?: PIXI.Ticker;
   private isSpinning = false;
-  private borderSize = 5;
+  private borderSize = borderSize;
+  private winBgs: PIXI.Sprite[] = [];
 
   constructor(
     bgTexture: PIXI.Texture,
@@ -35,6 +38,14 @@ export class ReelView extends PIXI.Container {
     // initial reel
     this.createFullReel(initialSymbols);
     this.layoutSymbols();
+
+    this.winBgs = createWinBgs(
+      PIXI.Loader.shared.resources["win_bg"].texture!,
+      reelWidth,
+      reelHeight / 3,
+      5
+    );
+    this.winBgs.forEach((bg) => this.addChildAt(bg, 1));
   }
 
   private createFullReel(symbols: string[]) {
@@ -62,7 +73,7 @@ export class ReelView extends PIXI.Container {
 
   private layoutSymbols() {
     this.symbolSprites.forEach((sprite, i) => {
-      sprite.y = i * this.slotHeight;
+      sprite.y = i * this.slotHeight + (this.slotHeight - sprite.height) / 2;
     });
   }
 

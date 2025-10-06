@@ -1,5 +1,6 @@
 // utils/SymbolFactory.ts
 import * as PIXI from "pixi.js";
+import { borderSize } from "./Constants";
 
 export function createSymbolSprite(
   symbol: string,
@@ -15,10 +16,10 @@ export function createSymbolSprite(
   if (!texture) return null;
 
   const sprite = new PIXI.Sprite(texture);
-  sprite.width = reelWidth * 0.8;
-  sprite.height = slotHeight * 0.9;
-  sprite.x = (reelWidth - sprite.width) / 2 + x;
-  sprite.y = y;
+  sprite.width = 90 % (reelWidth - 2 * borderSize);
+  sprite.height = 90 % (slotHeight - 2 * borderSize);
+  sprite.x = x + (reelWidth - sprite.width) / 2;
+  sprite.y = y + borderSize;
   sprite.mask = mask;
   return sprite;
 }
