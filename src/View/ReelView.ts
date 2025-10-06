@@ -85,7 +85,7 @@ export class ReelView extends PIXI.Container {
     if (this.isSpinning) return;
     this.isSpinning = true;
 
-    // collect current top 3
+    // collect current top 3 symbols
     const currentSymbols = this.symbolSprites
       .slice(0, 3)
       .map(
@@ -95,41 +95,49 @@ export class ReelView extends PIXI.Container {
           ) || "SYM01"
       );
 
-    console.log(" Current top 3 symbols:", currentSymbols, finalSymbols);
-    // build sequence
+    console.log("Current top 3 symbols:", currentSymbols, finalSymbols);
+
+    // build spin sequence (includes extra symbols for smooth drop)
     const spinSequence = createSpinSequence(currentSymbols, finalSymbols, 14);
-    console.log(" spinSequence", spinSequence);
-    // rebuild symbols
-    this.symbolSprites.forEach((s) => this.removeChild(s));
-    this.symbolSprites = [];
+    console.log("spinSequence", spinSequence);
+
+    // keep old symbols
+    const oldSprites = this.symbolSprites.slice();
+
+    // create new symbols above mask
+    const newSprites: PIXI.Sprite[] = [];
     spinSequence.forEach((symbol, i) => {
       const sprite = createSymbolSprite(
         symbol,
         this.reelWidth,
         this.slotHeight,
         0,
-        i * this.slotHeight - spinSequence.length * this.slotHeight, // start above the mask
+        -i * this.slotHeight, // start above mask
         this.reelMask
       );
       if (sprite) {
         this.addChild(sprite);
-        this.symbolSprites.push(sprite);
+        newSprites.push(sprite);
       }
     });
 
-    const totalHeight = this.symbolSprites.length * this.slotHeight;
+    // combine old + new symbols for animation
+    const allSprites = [...oldSprites, ...newSprites];
 
     const finalOffset = spinSequence.length * this.slotHeight;
-    console.log(" finalOffset", spinSequence.length, this.slotHeight);
+
     this.spinTicker?.stop();
     this.spinTicker = animateReel(
-      this.symbolSprites,
+      allSprites,
       this.slotHeight,
-      totalHeight,
+
       finalOffset,
       duration,
       () => this.finishSpin(finalSymbols, callback)
     );
+
+    // keep reference for tracking
+    this.symbolSprites = allSprites;
   }
 
   forceStop(finalSymbols: string[]) {
