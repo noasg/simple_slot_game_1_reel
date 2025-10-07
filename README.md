@@ -22,7 +22,9 @@ Dynamic Button State: Spin button disables automatically if the player has insuf
 
 
 Project Structure
+
 src/
+
 ├─ model/        # Game state and logic (ReelModel, SymbolsPath)
 
 ├─ view/         # Visual components (ReelView, SpinButtonView)
