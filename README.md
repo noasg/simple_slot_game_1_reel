@@ -24,9 +24,13 @@ Dynamic Button State: Spin button disables automatically if the player has insuf
 Project Structure
 src/
 ├─ model/        # Game state and logic (ReelModel, SymbolsPath)
+
 ├─ view/         # Visual components (ReelView, SpinButtonView)
+
 ├─ controller/   # GameController: handles interactions and updates
+
 ├─ utils/        # Helpers: animation, UI, constants, asset loading, win management
+
 ├─ main.ts       # Entry point: initializes PIXI, UI, model, controller
 
 
