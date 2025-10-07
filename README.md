@@ -49,5 +49,3 @@ Win Check: After the spin, the WinManager highlights winning symbols and updates
 Force Stop: Players can force a spin to finish early. The game immediately shows final symbols and updates the balance.
 
 Animation duration, reel layout, and symbol sequences are easily adjustable.
-
-Messages like "Spinning…" or "You won!" are defined in constants for easy localization or styling.
