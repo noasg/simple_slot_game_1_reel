@@ -1,4 +1,3 @@
-// ReelView.ts
 import * as PIXI from "pixi.js";
 import { createBackground, createMask } from "../utils/ReelLayoutFactory";
 import { createSpinSequence } from "../utils/ReelUtils";
@@ -7,6 +6,11 @@ import { animateReel } from "../utils/ReelAnimator";
 import { createWinBgs } from "../utils/WinBgFactory";
 import { borderSize } from "../utils/Constants";
 import { WinManager } from "../utils/WinManager";
+
+// ReelView - Handles the visual representation of a single slot machine reel.
+// - Displays symbols
+// - Animates spins
+// - Shows win backgrounds
 
 export class ReelView extends PIXI.Container {
   private background: PIXI.Sprite;
@@ -29,19 +33,21 @@ export class ReelView extends PIXI.Container {
   ) {
     super();
     this.reelWidth = reelWidth;
-    this.slotHeight = reelHeight / 3; // only used locally
+    this.slotHeight = reelHeight / 3; // Each slot height (3 visible symbols)
 
-    // background & mask
+    // Create background
     this.background = createBackground(bgTexture, reelWidth, reelHeight);
     this.addChild(this.background);
 
+    // Create mask to limit visible area
     this.reelMask = createMask(reelWidth, reelHeight, this.borderSize);
     this.addChild(this.reelMask);
 
-    // initial reel
+    // Create mask to limit visible area
     this.createFullReel(initialSymbols);
     this.layoutSymbols();
 
+    // Create win backgrounds and WinManager
     this.winBgs = createWinBgs(
       PIXI.Loader.shared.resources["win_bg"].texture!,
       reelWidth,
@@ -52,11 +58,13 @@ export class ReelView extends PIXI.Container {
     this.winBgs.forEach((bg) => this.addChildAt(bg, 1));
   }
 
+  // Fill the reel with repeated symbols (to allow smooth spinning)
   private createFullReel(symbols: string[]) {
+    // Remove old sprites
     this.symbolSprites.forEach((s) => this.removeChild(s));
     this.symbolSprites = [];
 
-    const repeatCount = 4;
+    const repeatCount = 4; // repeat symbols to fill reel for animation
     for (let r = 0; r < repeatCount; r++) {
       symbols.forEach((symbol, i) => {
         const sprite = createSymbolSprite(
@@ -75,17 +83,19 @@ export class ReelView extends PIXI.Container {
     }
   }
 
+  //Align symbols vertically in the reel
   private layoutSymbols() {
     this.symbolSprites.forEach((sprite, i) => {
       sprite.y = i * this.slotHeight + (this.slotHeight - sprite.height) / 2;
     });
   }
 
+  //Animate a spin to reach the finalSymbols
   spin(finalSymbols: string[], duration: number, callback?: () => void) {
     if (this.isSpinning) return;
     this.isSpinning = true;
 
-    // collect current top 3 symbols
+    // Get current top 3 symbols
     const currentSymbols = this.symbolSprites
       .slice(0, 3)
       .map(
@@ -97,14 +107,14 @@ export class ReelView extends PIXI.Container {
 
     console.log("Current top 3 symbols:", currentSymbols, finalSymbols);
 
-    // build spin sequence (includes extra symbols for smooth drop)
+    // Build a spin sequence (current + random middle + final symbols)
     const spinSequence = createSpinSequence(currentSymbols, finalSymbols, 17);
     console.log("spinSequence", spinSequence);
 
     // keep old symbols
     const oldSprites = this.symbolSprites.slice();
 
-    // create new symbols above mask
+    // Create new sprites above the visible mask
     const newSprites: PIXI.Sprite[] = [];
     spinSequence.forEach((symbol, i) => {
       const sprite = createSymbolSprite(
@@ -126,6 +136,7 @@ export class ReelView extends PIXI.Container {
 
     const finalOffset = spinSequence.length * this.slotHeight;
 
+    // Start reel animation
     this.spinTicker?.stop();
     this.spinTicker = animateReel(
       allSprites,
@@ -140,6 +151,7 @@ export class ReelView extends PIXI.Container {
     this.symbolSprites = allSprites;
   }
 
+  //Force stop an ongoing spin
   forceStop(finalSymbols: string[], callback?: () => void) {
     if (!this.isSpinning) return;
 
@@ -153,6 +165,7 @@ export class ReelView extends PIXI.Container {
     this.finishSpin(finalSymbols, callback);
   }
 
+  // hides all win backgrounds
   public hideWinBgs() {
     if (this.winBgTimeout) {
       clearTimeout(this.winBgTimeout);
@@ -161,10 +174,12 @@ export class ReelView extends PIXI.Container {
     this.winBgs.forEach((bg) => (bg.visible = false));
   }
 
+  // Finalize a spin: sets final symbols, shows wins, and calls callback
   private finishSpin(finalSymbols: string[], callback?: () => void) {
     // remove all current symbols
     this.symbolSprites.forEach((s) => this.removeChild(s));
     this.symbolSprites = [];
+    // Add final symbols
     finalSymbols.forEach((s, i) => {
       const sprite = createSymbolSprite(
         s,
@@ -179,6 +194,7 @@ export class ReelView extends PIXI.Container {
         this.symbolSprites.push(sprite);
       }
     });
+    // Check for wins
     this.winManager.checkWin(finalSymbols);
     this.isSpinning = false;
     callback?.();

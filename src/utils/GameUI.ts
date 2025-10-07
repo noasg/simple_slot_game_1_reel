@@ -1,14 +1,15 @@
 import * as PIXI from "pixi.js";
-
+import { initialSpinText, spinValue } from "./Constants";
+import { balanceText, curencySymbol } from "./Constants";
 export class GameUI {
-  public message: PIXI.Text;
-  public border: PIXI.Graphics;
-  public balanceText: PIXI.Text;
-  public spinCostText: PIXI.Text;
+  public message: PIXI.Text; // Text showing current game status (e.g., spinning, win, lose)
+  public border: PIXI.Graphics; // Decorative border around the game area
+  public balanceText: PIXI.Text; // Text showing player's current balance
+  public spinCostText: PIXI.Text; // Text showing cost per spin
 
   constructor(app: PIXI.Application, gameWidth: number, gameHeight: number) {
-    // Message
-    this.message = new PIXI.Text("Ready!", {
+    // Message Text
+    this.message = new PIXI.Text(initialSpinText, {
       fontFamily: "Arial",
       fontSize: 16,
       fill: 0xffffff,
@@ -19,7 +20,7 @@ export class GameUI {
     app.stage.addChild(this.message);
 
     // Balance text
-    this.balanceText = new PIXI.Text("rewasdasd", {
+    this.balanceText = new PIXI.Text("", {
       fontFamily: "Arial",
       fontSize: 18,
       fill: 0x00ff00,
@@ -28,8 +29,8 @@ export class GameUI {
     this.balanceText.y = 10;
     app.stage.addChild(this.balanceText);
 
-    // Spin cost info
-    this.spinCostText = new PIXI.Text("Spin cost: €1", {
+    // Spin Cost Text
+    this.spinCostText = new PIXI.Text(spinValue, {
       fontFamily: "Arial",
       fontSize: 14,
       fill: 0xffcc00,
@@ -45,8 +46,9 @@ export class GameUI {
     app.stage.addChild(this.border);
   }
 
+  //Update the balance displayed on screen
   updateBalance(amount: number) {
-    this.balanceText.text = `Balance: €${amount}`;
+    this.balanceText.text = balanceText + `${amount}` + curencySymbol;
     this.balanceText.style.fill = amount <= 0 ? 0xff0000 : 0x00ff00;
   }
 }

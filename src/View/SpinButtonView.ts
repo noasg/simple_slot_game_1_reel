@@ -36,7 +36,7 @@ export class SpinButton extends PIXI.Container {
   }
 
   private onClick() {
-    if (!this.enabled) return; // ⬅ block click when disabled
+    if (!this.enabled) return;
     this.clickCallback();
   }
 

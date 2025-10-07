@@ -2,6 +2,7 @@ export class SymbolsPath {
   private symbols: string[];
 
   constructor() {
+    // the received symbol order. Randommly, will pick a position and display 3 symbols. Wull check for win/loss
     this.symbols = [
       "SYM1",
       "SYM5",

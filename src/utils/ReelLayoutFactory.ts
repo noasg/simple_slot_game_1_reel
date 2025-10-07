@@ -1,6 +1,6 @@
-// utils/ReelLayoutFactory.ts
 import * as PIXI from "pixi.js";
 
+//Creates a simple rectangular background sprite for a reel
 export function createBackground(
   texture: PIXI.Texture,
   width: number,
@@ -12,6 +12,7 @@ export function createBackground(
   return bg;
 }
 
+//createMask - Creates a rectangular mask to clip symbols inside the reel
 export function createMask(
   width: number,
   height: number,

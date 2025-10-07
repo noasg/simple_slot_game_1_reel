@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 
+// Load all game assets and invoke callback when finished.
 export class AssetLoader {
   static loadAssets(callback: () => void) {
     const loader = PIXI.Loader.shared;

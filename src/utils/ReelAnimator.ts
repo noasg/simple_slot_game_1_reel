@@ -1,3 +1,4 @@
+//class used for animating a column (reel) of symbols in the slot machine.
 import * as PIXI from "pixi.js";
 
 export function animateReel(
@@ -18,6 +19,7 @@ export function animateReel(
     return s.y - slotHeight;
   });
 
+  // Add an update function to the ticker
   ticker.add((deltaTime) => {
     elapsed += deltaTime * (1000 / 60); // convert to ms
     const t = Math.min(elapsed / duration, 1);
@@ -44,9 +46,9 @@ export function animateReel(
         .slice(sprites.length - 3)
         .map((s) => s.texture.textureCacheIds?.[0] || "unknown");
 
-      console.log("✅ Final visible symbols:", visible);
+      console.log("Final visible symbols:", visible);
 
-      onComplete();
+      onComplete(); // Notify Controller that spin is finished
     }
   });
 

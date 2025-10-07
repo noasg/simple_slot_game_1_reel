@@ -30,9 +30,6 @@ export class CanvasResize {
     app.view.style.transform = "translate(-50%, -50%)";
   }
 
-  /**
-   * Attach resize event to automatically adjust PIXI canvas
-   */
   static attachResizeListener(
     app: PIXI.Application,
     gameWidth: number,
