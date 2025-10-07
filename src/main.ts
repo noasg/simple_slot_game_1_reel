@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { CanvasResize } from "./utils/CanvasResize";
 import { ReelModel } from "./model/ReelModel";
-import { SymbolsPath } from "./utils/SymbolsPath";
+import { SymbolsPath } from "./model/SymbolsPath";
 import { SpinButton } from "./View/SpinButtonView";
 import { GameController } from "./Controller/GameController";
 import { AssetLoader } from "./utils/AssetLoader";
@@ -63,5 +63,5 @@ AssetLoader.loadAssets(() => {
   app.stage.addChild(button);
 
   // Controller now knows about the reelView
-  new GameController(reel, button, ui.message, reelView);
+  new GameController(reel, button, ui.message, reelView, ui);
 });

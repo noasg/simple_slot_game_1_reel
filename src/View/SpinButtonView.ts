@@ -4,6 +4,7 @@ export class SpinButton extends PIXI.Container {
   private playSprite: PIXI.Sprite;
   private disabledSprite: PIXI.Sprite;
   private clickCallback: () => void = () => {};
+  private enabled: boolean = true;
 
   constructor(
     playTexture: PIXI.Texture,
@@ -21,7 +22,6 @@ export class SpinButton extends PIXI.Container {
     this.disabledSprite.width = width;
     this.disabledSprite.height = height;
 
-    // only show playSprite by default
     this.disabledSprite.visible = false;
 
     this.addChild(this.playSprite, this.disabledSprite);
@@ -36,14 +36,17 @@ export class SpinButton extends PIXI.Container {
   }
 
   private onClick() {
-    // Just fire the callback — no disable/enable logic anymore
+    if (!this.enabled) return; // ⬅ block click when disabled
     this.clickCallback();
   }
 
-  // Optional: if you still want to visually toggle between enabled/disabled
-  // without blocking input, you could add a method:
-  public setVisualState(isActive: boolean) {
-    this.playSprite.visible = isActive;
-    this.disabledSprite.visible = !isActive;
+  public setEnabled(value: boolean) {
+    this.enabled = value;
+    this.playSprite.visible = value;
+    this.disabledSprite.visible = !value;
+
+    // adjust interactivity
+    this.interactive = value;
+    this.buttonMode = value;
   }
 }

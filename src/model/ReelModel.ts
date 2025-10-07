@@ -1,11 +1,40 @@
-import type { SymbolsPath } from "../utils/SymbolsPath";
-
+// model/ReelModel.ts
+import type { SymbolsPath } from "./SymbolsPath";
+import { initialAmmount, spinCost } from "../utils/Constants";
 export class ReelModel {
   private symbols: string[];
+  private balance: number;
+  private spinCost: number;
 
-  constructor(symbolsOrder: SymbolsPath) {
+  constructor(
+    symbolsOrder: SymbolsPath,
+    startingBalance: number = initialAmmount,
+    spinCostValue: number = spinCost
+  ) {
     this.symbols = symbolsOrder.getSymbols();
-    console.log("ReelModel initialized with symbols:", this.symbols);
+    this.balance = startingBalance;
+    this.spinCost = spinCostValue;
+  }
+
+  getBalance(): number {
+    return this.balance;
+  }
+
+  getSpinCost(): number {
+    return this.spinCost;
+  }
+
+  canSpin(): boolean {
+    return this.balance >= this.spinCost;
+  }
+
+  deductSpinCost(): void {
+    if (!this.canSpin()) throw new Error("Insufficient balance");
+    this.balance -= this.spinCost;
+  }
+
+  addWin(amount: number): void {
+    this.balance += amount;
   }
 
   // simulate a spin → returns next 3 symbols

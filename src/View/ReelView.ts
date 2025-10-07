@@ -140,7 +140,7 @@ export class ReelView extends PIXI.Container {
     this.symbolSprites = allSprites;
   }
 
-  forceStop(finalSymbols: string[]) {
+  forceStop(finalSymbols: string[], callback?: () => void) {
     if (!this.isSpinning) return;
 
     // stop ticker immediately
@@ -150,7 +150,7 @@ export class ReelView extends PIXI.Container {
     this.winManager.hideWinBgs();
 
     // finish immediately with final symbols
-    this.finishSpin(finalSymbols);
+    this.finishSpin(finalSymbols, callback);
   }
 
   public hideWinBgs() {
